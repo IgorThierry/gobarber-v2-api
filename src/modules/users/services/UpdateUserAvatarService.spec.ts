@@ -41,6 +41,7 @@ describe('UpdateUserAvatar', () => {
         avatarFilename: 'avatar.jpg',
       }),
     ).rejects.toBeInstanceOf(AppError);
+    
   });
 
   it('should delete old avatar when updating new one', async () => {
