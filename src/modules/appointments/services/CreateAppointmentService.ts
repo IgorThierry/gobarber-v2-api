@@ -1,5 +1,5 @@
 import { startOfHour } from 'date-fns';
-import {  inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
@@ -10,6 +10,7 @@ import IAppointmentsRepository from '@modules/appointments/repositories/IAppoint
 interface IRequest {
   date: Date;
   provider_id: string;
+  user_id: string;
 }
 
 @injectable()
@@ -19,7 +20,11 @@ class CreateAppointmentService {
     private appointmentsRepository: IAppointmentsRepository,
   ) {}
 
-  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
+  public async execute({
+    provider_id,
+    user_id,
+    date,
+  }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
     const findAppointmentInSameDate = await this.appointmentsRepository.findByDate(
@@ -32,6 +37,7 @@ class CreateAppointmentService {
 
     const appointment = await this.appointmentsRepository.create({
       provider_id,
+      user_id,
       date: appointmentDate,
     });
 
