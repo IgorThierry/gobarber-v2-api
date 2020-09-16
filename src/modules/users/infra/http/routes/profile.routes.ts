@@ -19,8 +19,18 @@ profileRouter.put(
       name: Joi.string().required(),
       email: Joi.string().email().required(),
       old_password: Joi.string(),
-      password: Joi.string().min(6),
-      password_confirmation: Joi.string().valid(Joi.ref('password')),
+      password: Joi.string().min(6).when('old_password', {
+        is: null,
+        then: Joi.optional(),
+        otherwise: Joi.required(),
+      }),
+      password_confirmation: Joi.string()
+        .when('password', {
+          is: null,
+          then: Joi.optional(),
+          otherwise: Joi.required(),
+        })
+        .valid(Joi.ref('password')),
     },
   }),
   profileController.update,
